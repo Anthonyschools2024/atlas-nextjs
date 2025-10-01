@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import logo from '@/assets/logo.png'; // Make sure this path is correct
+import logo from '@/assets/logo.png';
 
 export default function Page() {
   return (
@@ -20,10 +20,10 @@ export default function Page() {
           The best place to ask questions and share knowledge.
         </p>
         <Link 
-          href="/ui"
+          href="/login"
           className="px-6 py-3 bg-secondary text-white font-semibold rounded-lg shadow-md hover:bg-secondary/90 transition-colors"
         >
-          Go to the App
+          Log In
         </Link>
       </div>
     </main>

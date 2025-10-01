@@ -3,57 +3,52 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { insertTopic, insertQuestion, incrementVotes } from './data';
+import { signIn, signOut } from '@/auth';
+import { AuthError } from 'next-auth';
 
-/**
- * Server Action: Creates a new topic in the database.
- */
+// ... (keep your existing createTopic, createQuestion, incrementVote functions)
+
 export async function createTopic(formData: FormData) {
   const title = formData.get('title') as string;
-
-  // Basic validation
-  if (!title || title.trim().length === 0) {
-    // In a real app, you'd handle this more gracefully
-    return;
-  }
-
+  if (!title || title.trim().length === 0) { return; }
   await insertTopic({ title });
-
-  // Revalidate the cache for the UI page to show the new topic
   revalidatePath('/ui');
-  // Redirect the user back to the main topics page
   redirect('/ui');
 }
 
-/**
- * Server Action: Creates a new question for a specific topic.
- * @param topicId - The ID of the topic the question belongs to.
- * @param formData - The form data containing the question's title.
- */
 export async function createQuestion(topicId: string, formData: FormData) {
   const title = formData.get('title') as string;
-
-  if (!title || title.trim().length === 0) {
-    return;
-  }
-  
-  await insertQuestion({
-    title,
-    topic_id: topicId,
-    votes: 0, // Questions start with 0 votes
-  });
-
-  // Revalidate the cache for the specific topic page to show the new question
+  if (!title || title.trim().length === 0) { return; }
+  await insertQuestion({ title, topic_id: topicId, votes: 0 });
   revalidatePath(`/ui/topics/${topicId}`);
 }
 
-/**
- * Server Action: Increments the vote count for a specific question.
- * @param questionId - The ID of the question to vote for.
- * @param topicId - The ID of the topic, used for revalidating the page.
- */
 export async function incrementVote(questionId: string, topicId: string) {
   await incrementVotes(questionId);
-  
-  // Revalidate the cache for the specific topic page to show the new vote count
   revalidatePath(`/ui/topics/${topicId}`);
-}// Define your server actions here
+}
+
+// NEW: Server action for authentication
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+    throw error;
+  }
+}
+
+// NEW: Server action for signing out
+export async function signOutAction() {
+  await signOut();
+}
