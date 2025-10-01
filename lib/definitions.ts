@@ -13,6 +13,7 @@ export type Topic = {
   title: string;
 };
 
+// UPDATED: Ensured this type definition is consistent with the data and database.
 export type Question = {
   id: string;
   title: string;

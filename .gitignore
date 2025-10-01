@@ -1,36 +1,36 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# Dependencies
 /node_modules
-/.pnp
-.pnp.js
 
-# testing
-/coverage
-
-# next.js
+# Next.js build files
 /.next/
 /out/
 
-# production
-/build
+# Production build
+/.vercel
 
-# misc
-.DS_Store
-*.pem
+# Environment variables
+# Ignore all .env files to keep secrets out of your repository.
+# Your .env.local file with database credentials will be ignored by this.
+.env
+.env*.local
 
-# debug
+# Log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# local env files
-.env*.local
-.env
+# Editor directories and files
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# Operating System files
+.DS_Store
+Thumbs.db
